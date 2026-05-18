@@ -10,6 +10,8 @@ description: Use when screening or searching jobs in English, Chinese, or Japane
 Use the local Job Mediator backend as the system of record for multilingual job screening. This skill is for English, Chinese, and Japanese role discovery, ranking, and follow-up.
 
 Read `backend-api-workflows.md` before your first run if you need exact payload shapes.
+Read `application-records.md` whenever screening may lead to live applications or
+when the user asks to avoid jobs that were already submitted.
 
 ## When to Use
 
@@ -32,9 +34,10 @@ Do not use this skill for final resume rewriting. Use `tailoring-resume-to-jd` f
    - `SEEK` for English or Australia-facing searches
    - `doda` for Japanese-market searches
 5. Run `POST /api/v1/jobs/search/seek` or `POST /api/v1/jobs/search/doda`.
-6. For promising roles, call `POST /api/v1/evaluate-job` to get the structured A-F fit result.
-7. If the JD is not easy for the user to read, call `POST /api/v1/translate-job-description` to produce simplified Chinese support text.
-8. Summarize jobs by score, key risks, and next action.
+6. Read the local application log described in `application-records.md`; remove or clearly flag already-submitted jobs before ranking.
+7. For promising roles, call `POST /api/v1/evaluate-job` to get the structured A-F fit result.
+8. If the JD is not easy for the user to read, call `POST /api/v1/translate-job-description` to produce simplified Chinese support text.
+9. Summarize jobs by score, key risks, duplicate status, and next action.
 
 ## Language Policy
 
@@ -51,7 +54,9 @@ If the user wants to inspect live listings, compare real portal pages, or contin
 1. Explicitly invoke `@chrome`.
 2. Reuse the user's logged-in Chrome context.
 3. Open the shortlisted job URLs there.
-4. Do not switch to generic browsing for cookie-dependent or authenticated steps.
+4. Before starting an application, check the local application log again so a duplicate is not submitted.
+5. After a confirmed submission, append the job to the local log using `application-records.md`.
+6. Do not switch to generic browsing for cookie-dependent or authenticated steps.
 
 Use Chrome especially for:
 
@@ -72,10 +77,12 @@ Return shortlists in a compact structure:
 - why it matches
 - why it may fail
 - whether Chrome follow-up is worth it
+- whether it appears already applied or duplicate-risky
 
 ## Common Mistakes
 
 - Searching with the wrong resume language for the market
+- Recommending jobs already marked `Submitted` in the local application log
 - Tailoring the resume inside the screening loop instead of first ranking jobs
 - Using generic browser tooling for portal/application steps that should move into `@chrome`
 - Treating translated Chinese helper text as the original JD source of truth

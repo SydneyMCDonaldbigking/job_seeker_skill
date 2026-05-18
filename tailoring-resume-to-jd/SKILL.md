@@ -10,6 +10,9 @@ description: Use when turning a stored master resume into a JD-specific applicat
 Use the local Job Mediator backend to turn an existing master resume into a JD-specific package. This skill covers JD upload, fit evaluation, previewing changes, persisting a tailored resume, and generating downstream artifacts.
 
 Read `backend-api-workflows.md` when you need exact endpoint or payload details.
+Read `application-records.md` before any live application step. Use
+`application-personal-info-template.md` as the shape for the user's private local
+`application_personal_info.md` file.
 
 ## When to Use
 
@@ -40,6 +43,8 @@ Do not use this skill for broad multi-job discovery. Use `filtering-jobs-multili
    - outreach message
    - resume PDF
    - direct tailored PDF
+9. For live applications, check the local application log before opening the form.
+10. After the portal confirms submission, append a row to the local application log.
 
 ## Decision Rule
 
@@ -62,6 +67,16 @@ After a tailored resume is ready, explicitly invoke `@chrome` if the user wants 
 - fill or inspect an application form
 - use existing account sessions on remote recruiting sites
 
+Before filling forms, read the user's local `application_personal_info.md` when it
+exists. Use stored answers only when the wording clearly matches the question.
+Ask the user for ambiguous or legally sensitive answers, especially work rights,
+visa restrictions, sponsorship, years of experience, qualifications, background
+checks, and demographic questions.
+
+Before submitting, verify the target account, selected resume, cover letter, and
+any required employer questions. After the confirmation page appears, update
+`applied_jobs_log.md` using `application-records.md`.
+
 Do not try to replace the user's authenticated application flow with generic browser automation.
 
 ## Output Shape
@@ -74,6 +89,7 @@ When reporting results, include:
 - top tailoring priorities
 - key changed areas
 - generated artifacts available
+- application-log status if this entered a live portal
 - whether a Chrome handoff is the next best step
 
 ## Common Mistakes
@@ -82,3 +98,5 @@ When reporting results, include:
 - Saving immediately when the user actually asked to review a preview
 - Forgetting to set `content_language` before generating a multilingual result
 - Treating a generated cover letter as proof that the tailored resume itself was persisted
+- Guessing sensitive form answers instead of using the user's local profile or asking
+- Forgetting to log a confirmed live submission

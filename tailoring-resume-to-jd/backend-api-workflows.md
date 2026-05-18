@@ -3,8 +3,11 @@
 Default backend:
 
 ```text
-http://127.0.0.1:8000
+http://127.0.0.1:8001
 ```
+
+If the backend was started on another port, use the active port from the user's
+session or local config instead.
 
 API prefix:
 

@@ -11,12 +11,17 @@ These skills are meant for agents that need to:
 - search SEEK and doda from a local resume
 - evaluate JD fit with the A-F scoring backend
 - tailor resumes and generate downstream materials
+- track submitted jobs to avoid duplicate applications
+- reuse a local, private application profile for common form answers
 - hand off live portal inspection or application steps to the Chrome skill
 
 ## Included Files
 
 - `filtering-jobs-multilingual/SKILL.md`
+- `filtering-jobs-multilingual/application-records.md`
 - `tailoring-resume-to-jd/SKILL.md`
+- `tailoring-resume-to-jd/application-records.md`
+- `tailoring-resume-to-jd/application-personal-info-template.md`
 - `references/backend-api-workflows.md`
 - `install-to-codex.ps1`
 
@@ -36,10 +41,21 @@ The script copies both skills into:
 
 ## Runtime Assumptions
 
-- Backend root: `http://127.0.0.1:8000`
-- Health check: `http://127.0.0.1:8000/api/v1/health`
+- Backend root: `http://127.0.0.1:8001` unless overridden by the local backend config
+- Health check: `http://127.0.0.1:8001/api/v1/health`
 - Local secret config: `C:\Users\uryuu\Desktop\go_find_a_job\backend\data\config.json`
 - Safe example config: `C:\Users\uryuu\Desktop\go_find_a_job\backend\data\config.example.json`
+
+## Local Application Memory
+
+Keep reusable application state in the active workspace, not in this public skill
+repository:
+
+- `applied_jobs_log.md`: jobs that were shortlisted, skipped, started, failed, or submitted
+- `application_personal_info.md`: private reusable form answers copied from the template
+
+Agents should read these files before applying, append to the log after confirmed
+submission, and avoid storing passwords or identity-document details.
 
 ## Chrome Integration
 

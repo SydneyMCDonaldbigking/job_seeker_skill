@@ -3,8 +3,11 @@
 Default backend:
 
 ```text
-http://127.0.0.1:8000
+http://127.0.0.1:8001
 ```
+
+If the backend was started on another port, use the active port from the user's
+session or local config instead.
 
 API prefix:
 
@@ -246,3 +249,6 @@ POST /api/v1/scheduled-scan/jobs/status
 ```
 
 Use scheduled-scan endpoints when the user wants recurring discovery or to mark discovered jobs as `saved`, `ignored`, or `applied`.
+
+For manual Chrome applications that do not have a backend job key, maintain the
+workspace Markdown application log described by the skills instead.
