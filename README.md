@@ -23,6 +23,7 @@ These skills are meant for agents that need to:
 - `tailoring-resume-to-jd/application-records.md`
 - `tailoring-resume-to-jd/application-personal-info-template.md`
 - `references/backend-api-workflows.md`
+- `references/seek-quick-apply-runbook.md`
 - `install-to-codex.ps1`
 
 ## Install Into Codex
@@ -43,8 +44,8 @@ The script copies both skills into:
 
 - Backend root: `http://127.0.0.1:8001` unless overridden by the local backend config
 - Health check: `http://127.0.0.1:8001/api/v1/health`
-- Local secret config: `C:\Users\uryuu\Desktop\go_find_a_job\backend\data\config.json`
-- Safe example config: `C:\Users\uryuu\Desktop\go_find_a_job\backend\data\config.example.json`
+- Local secret config: keep the private backend config outside this public repository, for example under the local backend `data/config.json`.
+- Safe example config: commit only redacted or example config files such as `data/config.example.json`.
 
 ## Local Application Memory
 
