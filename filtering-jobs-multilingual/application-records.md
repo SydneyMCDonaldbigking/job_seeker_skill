@@ -2,60 +2,39 @@
 
 Use this reference whenever screening can lead to a live application.
 
-## Default Local Files
+## Default Local Data Source
 
-Prefer user-provided paths. If the user has not provided paths, use these files in
-the active workspace:
-
-- `applied_jobs_log.md` for submitted, saved, skipped, or duplicate jobs
-- `application_personal_info.md` for reusable application answers
-
-Do not store passwords, one-time codes, tax IDs, identity documents, or secret
-tokens in either file.
+Read `job_application_profile.json` in the active workspace when it exists.
+For manual SEEK work, its `applications` array is the local source of truth.
+Legacy Markdown logs are read-only migration references when JSON exists.
 
 ## Before Shortlisting
 
-1. Read `applied_jobs_log.md` if it exists.
-2. Treat a job as already handled when any of these match:
-   - exact portal job id
-   - exact application or job URL
-   - same source, company, and role title with `Submitted` status
-3. Exclude already-submitted jobs from the main shortlist unless the user asks to
-   inspect duplicates.
-4. If the match is fuzzy, keep the job but label the duplicate risk.
+1. Read `applications`.
+2. Treat a job as already handled when its exact portal job ID or exact URL
+   matches a record whose status is `submitted`.
+3. Exclude already-submitted jobs from the primary shortlist unless the user
+   asks to inspect duplicates.
+4. If only company and role look similar, keep the result but label duplicate
+   risk rather than assuming it is the same job.
 
-## Log Table
+## Status Records
 
-Use this Markdown table shape for `applied_jobs_log.md`:
+When a screening decision needs to be recorded, append an application entry
+with a status such as `shortlisted`, `skipped`, `duplicate`, `started`,
+`submitted`, or `failed`. Do not rewrite historical entries unless requested.
 
-```markdown
-| Date | Source | Company | Role | Job ID | URL | Resume | Cover Letter | Status | Notes |
-|---|---|---|---|---|---|---|---|---|---|
-| 2026-05-19 | SEEK | Example Co | Graduate AI Engineer | 12345678 | https://au.seek.com/job/12345678 | tailored-example.pdf | tailored inline cover letter | Submitted | SEEK confirmed submission. |
-```
-
-Recommended status values:
-
-- `Shortlisted`
-- `Skipped`
-- `Duplicate`
-- `Started`
-- `Submitted`
-- `Failed`
-
-Append new rows only. Do not rewrite or delete earlier rows unless the user asks.
+For Gmail-sourced SEEK work, include the source account or message context when
+known. If the user manually submitted a job and SEEK Applied jobs confirms it,
+record `manual_user_submission`; use unknown resume/cover-letter values when
+those artifacts were not inspected.
 
 ## Backend Status Sync
 
-If the job came from the scheduled-scan backend and includes a backend job key,
-also mark the backend status after the user decides:
+For jobs with a scheduled-scan backend key, also update:
 
 ```http
 POST /api/v1/scheduled-scan/jobs/status
 ```
 
-Use status values supported by the backend, usually `saved`, `ignored`, or
-`applied`.
-
-For manual Chrome applications without a backend job key, the Markdown log is the
-source of truth.
+Use backend-supported values such as `saved`, `ignored`, or `applied`.

@@ -19,11 +19,13 @@ These skills are meant for agents that need to:
 
 - `filtering-jobs-multilingual/SKILL.md`
 - `filtering-jobs-multilingual/application-records.md`
+- `filtering-jobs-multilingual/gmail-seek-recommendations.md`
 - `tailoring-resume-to-jd/SKILL.md`
 - `tailoring-resume-to-jd/application-records.md`
 - `tailoring-resume-to-jd/application-personal-info-template.md`
 - `references/backend-api-workflows.md`
 - `references/seek-quick-apply-runbook.md`
+- `references/seek-gmail-application-workflow.md`
 - `install-to-codex.ps1`
 
 ## Install Into Codex

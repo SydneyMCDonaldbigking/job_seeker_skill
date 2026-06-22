@@ -2,76 +2,58 @@
 
 Use this reference whenever a tailored package is used in a live application.
 
-## Default Local Files
+## Default Local Data Source
 
-Prefer user-provided paths. If the user has not provided paths, use these files in
-the active workspace:
+Prefer a user-provided path. Otherwise, read `job_application_profile.json` in
+the active workspace. It is the source of truth for reusable answers, portal
+settings, resume references, and application outcomes.
 
-- `applied_jobs_log.md` for submitted, saved, skipped, or duplicate jobs
-- `application_personal_info.md` for reusable application answers
+Legacy `application_personal_info.md` and `applied_jobs_log.md` files are
+read-only migration references when JSON exists.
 
 Do not store passwords, one-time codes, tax IDs, identity documents, or secret
-tokens in either file.
+tokens in application data.
 
 ## Before Applying
 
-1. Read `applied_jobs_log.md` if it exists.
-2. Check the target job against exact job id, exact URL, and source/company/role.
-3. If it was already submitted, stop and tell the user before opening the
-   application flow.
-4. If it was started or failed, summarize the last note and continue only when
-   the user wants to retry.
+1. Read `applications`.
+2. Treat an exact matching `job_id` or `url` with status `submitted` as already
+   submitted and stop before opening the application flow.
+3. If an earlier record is `started` or `failed`, summarize it and continue only
+   when the user wants to retry.
+4. For SEEK, read `sites.seek_au.accounts` for account-specific overrides.
 
 ## During Application
 
-Use `application_personal_info.md` for stable form answers, but only when the
-form wording clearly matches the stored answer. If a question is ambiguous or
-legally sensitive, ask the user instead of guessing.
+Use `profile` for stable facts and the active site's `form_mappings` for visible
+portal choices. Ask before using a mapping marked `requires_confirmation` unless
+the current conversation has explicitly confirmed that answer or direct-submit
+batch policy.
 
-Common sensitive fields include:
-
-- work rights or visa restrictions
-- sponsorship requirements
-- years of experience
-- education completion
-- criminal/background checks
-- equal opportunity or demographic questions
-- notice period and availability
+Sensitive fields include work rights, visa restrictions, sponsorship,
+experience, qualifications, medical or background checks, demographic
+questions, notice period, and availability.
 
 ## After Submission
 
-Append one row to `applied_jobs_log.md` only after the portal clearly confirms
-submission. Include the tailored resume file, cover letter type, and any special
-question answers in the notes.
+Append one application object only after the portal clearly confirms
+submission. Store the site key, company, role, job ID, URL, account used,
+resume filename, cover-letter note, status `submitted`, and confirmation note.
+When a sensitive answer was explicitly confirmed and used, store it under
+`confirmed_sensitive_answers`.
 
-Use this Markdown table shape:
-
-```markdown
-| Date | Source | Company | Role | Job ID | URL | Resume | Cover Letter | Status | Notes |
-|---|---|---|---|---|---|---|---|---|---|
-| 2026-05-19 | SEEK | Example Co | Graduate AI Engineer | 12345678 | https://au.seek.com/job/12345678 | tailored-example.pdf | tailored inline cover letter | Submitted | SEEK confirmed submission. |
-```
-
-Recommended status values:
-
-- `Started`
-- `Submitted`
-- `Failed`
-- `Withdrawn`
-- `Duplicate`
-
-Append new rows only. Do not rewrite or delete earlier rows unless the user asks.
+For manually submitted jobs later confirmed in a portal history page, record
+`source: manual_user_submission`. If the resume or cover letter was not
+inspected, store an explicit unknown value rather than guessing.
 
 ## Backend Status Sync
 
 If the job came from the scheduled-scan backend and includes a backend job key,
-also mark the backend status after submission:
+also mark backend status using:
 
 ```http
 POST /api/v1/scheduled-scan/jobs/status
 ```
 
-Use status `applied` when the portal confirms submission.
-
-For manual Chrome applications without a backend job key, the Markdown log is the
-source of truth.
+Use status `applied` after portal confirmation. For manual browser applications,
+the JSON application entry is the local source of truth.
