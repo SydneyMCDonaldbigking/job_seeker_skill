@@ -1,0 +1,4 @@
+interface:
+  display_name: "Marvis Job Pipeline"
+  short_description: "Track and deduplicate job applications in Marvis"
+  default_prompt: "Use $managing-job-pipeline-marvis to check and update my local job application pipeline."

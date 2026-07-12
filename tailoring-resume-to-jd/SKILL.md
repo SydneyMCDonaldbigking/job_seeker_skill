@@ -43,10 +43,11 @@ Do not use this skill for broad multi-job discovery. Use `filtering-jobs-multili
    - outreach message
    - resume PDF
    - direct tailored PDF
-9. For live applications, read `job_application_profile.json` and check
-   `applications` before opening the form.
-10. After the portal confirms submission, append an application object to
-   `job_application_profile.json`.
+9. For live applications, read private facts from
+   `job_application_profile.json`, then load `managing-job-pipeline-marvis` and
+   check the exact job ID and URL before opening the form.
+10. After the portal confirms submission, transition the matching Marvis task
+    to `submitted` with confirmation evidence.
 
 ## Native Resume Mode
 
@@ -89,12 +90,12 @@ clearly matches; any mapping marked `requires_confirmation` must be confirmed
 before use unless the current conversation explicitly confirms that answer or
 authorizes the batch policy.
 
-Before submitting, check `applications` for duplicate job IDs or URLs and verify
+Before submitting, query the Marvis pipeline for duplicate job IDs or URLs and verify
 the target account, selected resume, cover letter, and required questions on the
 review page. If the user has explicitly authorized direct submission for this
 batch, submit after those checks pass; otherwise obtain explicit confirmation.
-After the portal confirms submission, append one application object according
-to `application-records.md`.
+After the portal confirms submission, transition one Marvis task according to
+`application-records.md`. Do not append to the legacy JSON applications array.
 
 For SEEK, the review page is mandatory because saved resume and cover-letter
 state can carry over from a previous application.
@@ -122,4 +123,4 @@ When reporting results, include:
 - Treating a generated cover letter as proof that the tailored resume itself was persisted
 - Guessing sensitive form answers instead of reading the JSON profile or asking
 - Submitting before checking the review page for a stale cover letter or wrong resume
-- Forgetting to record a confirmed live submission in `applications`
+- Forgetting to record a confirmed live submission in the Marvis pipeline

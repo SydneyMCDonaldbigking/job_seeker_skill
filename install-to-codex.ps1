@@ -5,7 +5,8 @@ $targetRoot = Join-Path $HOME ".codex\skills"
 
 $skills = @(
     "filtering-jobs-multilingual",
-    "tailoring-resume-to-jd"
+    "tailoring-resume-to-jd",
+    "managing-job-pipeline-marvis"
 )
 
 New-Item -ItemType Directory -Path $targetRoot -Force | Out-Null

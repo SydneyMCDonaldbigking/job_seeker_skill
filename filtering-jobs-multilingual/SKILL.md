@@ -40,8 +40,10 @@ Do not use this skill for final resume rewriting. Use `tailoring-resume-to-jd` f
    - Gmail SEEK recommendations when the user points to SEEK email digests or asks to mine Gmail for roles
 5. Run `POST /api/v1/jobs/search/seek` or `POST /api/v1/jobs/search/doda`.
 6. For Gmail SEEK recommendations, read the relevant Gmail message, extract job links and facts, then screen against `gmail-seek-recommendations.md`.
-7. Read `job_application_profile.json`; remove or clearly flag jobs already
-   recorded as `submitted` before ranking.
+7. Load `managing-job-pipeline-marvis` and query the Marvis job pipeline by
+   exact portal job ID and canonical URL. Remove or clearly flag handled jobs
+   before ranking. Use the legacy JSON applications array only as a read-only
+   fallback when no Marvis project exists.
 8. For promising roles, call `POST /api/v1/evaluate-job` to get the structured A-F fit result when the backend is in use.
 9. If the JD is not easy for the user to read, call `POST /api/v1/translate-job-description` to produce simplified Chinese support text.
 10. Summarize jobs by score, key risks, duplicate status, account requirements, and next action.
@@ -62,9 +64,10 @@ If the user wants to inspect live listings, compare real portal pages, or contin
 2. Reuse the user's logged-in Chrome context.
 3. Verify the active SEEK account before applying, especially when the user has multiple Chrome/SEEK accounts.
 4. Open the shortlisted job URLs there.
-5. Before starting an application, read `job_application_profile.json` again so
-   an entry whose job ID or URL is already `submitted` is not resubmitted.
-6. After a confirmed submission, append an application object according to
+5. Before starting an application, query the Marvis pipeline again so an exact
+   handled job ID or URL is not resubmitted.
+6. After a confirmed submission, transition the Marvis task to `submitted`
+   with portal or email confirmation evidence according to
    `application-records.md`.
 7. Do not switch to generic browsing for cookie-dependent or authenticated steps.
 
@@ -92,7 +95,7 @@ Return shortlists in a compact structure:
 ## Common Mistakes
 
 - Searching with the wrong resume language for the market
-- Recommending jobs already recorded as `submitted` in `job_application_profile.json`
+- Recommending jobs already handled in the Marvis job pipeline
 - Forgetting to verify which SEEK account is active before a Gmail-sourced application
 - Treating a SEEK email recommendation as sufficient fit evidence without opening the live JD
 - Tailoring the resume inside the screening loop instead of first ranking jobs

@@ -1,9 +1,11 @@
 # Job Mediator Skills
 
-This folder packages two Codex skills around the local Job Mediator backend:
+This folder packages three Codex skills around the local Job Mediator backend
+and a Marvis-compatible application pipeline:
 
 - `filtering-jobs-multilingual`
 - `tailoring-resume-to-jd`
+- `managing-job-pipeline-marvis`
 
 These skills are meant for agents that need to:
 
@@ -12,6 +14,7 @@ These skills are meant for agents that need to:
 - evaluate JD fit with the A-F scoring backend
 - tailor resumes and generate downstream materials
 - track submitted jobs to avoid duplicate applications
+- store application state as local Marvis Markdown tasks
 - reuse a local, private application profile for common form answers
 - hand off live portal inspection or application steps to the Chrome skill
 
@@ -23,6 +26,9 @@ These skills are meant for agents that need to:
 - `tailoring-resume-to-jd/SKILL.md`
 - `tailoring-resume-to-jd/application-records.md`
 - `tailoring-resume-to-jd/application-personal-info-template.md`
+- `managing-job-pipeline-marvis/SKILL.md`
+- `managing-job-pipeline-marvis/scripts/job_pipeline.py`
+- `managing-job-pipeline-marvis/references/schema.md`
 - `references/backend-api-workflows.md`
 - `references/seek-quick-apply-runbook.md`
 - `references/seek-gmail-application-workflow.md`
@@ -36,7 +42,7 @@ From this repository root:
 powershell -ExecutionPolicy Bypass -File .\install-to-codex.ps1
 ```
 
-The script copies both skills into:
+The script copies all three skills into:
 
 ```text
 %USERPROFILE%\.codex\skills\
@@ -51,14 +57,22 @@ The script copies both skills into:
 
 ## Local Application Memory
 
-Keep reusable application state in the active workspace, not in this public skill
-repository:
+Keep reusable application state in the active workspace, not in this public
+skill repository. Prefer:
 
-- `applied_jobs_log.md`: jobs that were shortlisted, skipped, started, failed, or submitted
-- `application_personal_info.md`: private reusable form answers copied from the template
+- `Marvis/Job Search/`: current application pipeline and duplicate-check source
+- `job_application_profile.json`: private profile facts, portal mappings, account overrides, and resume assets
+- legacy Markdown/JSON application logs: read-only migration backups
 
-Agents should read these files before applying, append to the log after confirmed
-submission, and avoid storing passwords or identity-document details.
+Agents should load `managing-job-pipeline-marvis` before screening or applying,
+transition a task to `submitted` only after confirmation, and avoid storing
+passwords or identity-document details.
+
+## Privacy Boundary
+
+Do not commit a real Vault, application records, resumes, account emails,
+phone numbers, addresses, visa details, or salary answers. This repository
+contains only reusable schemas, deterministic scripts, and redacted examples.
 
 ## Chrome Integration
 

@@ -5,8 +5,8 @@ Use this reference when a Gmail SEEK recommendation email becomes the job source
 ## Inputs
 
 - Gmail message from `SEEK Recommendations <noreply@s.seek.com.au>`
-- Local structured application memory
-- Local submitted-job log
+- `job_application_profile.json` for private profile and account facts
+- the Marvis job pipeline for records and duplicate checks
 - The user's active Chrome SEEK session
 
 ## Intake
@@ -31,6 +31,7 @@ Skip or defer:
 - senior/staff/lead roles with hard 3-7+ year requirements
 - forms that require unknown sensitive facts, demographics, visa expiry, police/medical details, or unconfirmed experience
 - roles where the visible questions would force inaccurate answers
+- external ATS flows that require a new third-party account, full profile rebuild, unconfirmed legal details, or broad relocation/site commitments
 
 ## Live Checks
 
@@ -38,10 +39,13 @@ Before applying:
 
 1. Open the live SEEK job page.
 2. Verify job id, role, company, and application type.
-3. Deduplicate against exact job id and URL in local application memory.
+3. Deduplicate against exact job ID and URL through
+   `managing-job-pipeline-marvis`.
 4. Verify the active SEEK account in Chrome.
 
-If the user says to use the native/original resume, do not run backend tailoring. Use the current master resume from local memory, and write an inline cover letter from the JD and confirmed local facts.
+If the user says to use the native/original resume, do not run backend tailoring. Use the current master resume from `resume_assets.master` and write an inline cover letter from the JD and confirmed local facts.
+
+SEEK post-application recommendations may be used as a secondary source after a confirmed submission. Treat them like Gmail recommendations: open the live JD, dedupe by job id/URL, and record the source as `seek_post_apply_recommendations` if submitted.
 
 ## Review Gate
 
@@ -55,8 +59,17 @@ The SEEK review page is mandatory. Check:
 
 SEEK may silently keep an old cover letter or revert a selected resume, so do not submit without this check.
 
+Do not select "Show strong interest", SEEK Pass, identity verification, or "Add to Profile" / credential prompts unless the user explicitly asks. Continue through profile pages without adding unverified items.
+
 ## Records
 
-After portal success, append the local application record with source, account email, resume filename, cover-letter note, sensitive answers used, and the exact success message.
+After portal success, transition the matching Marvis task to `submitted` and
+record source `gmail_seek_recommendations` or `seek_search`, account email,
+resume filename, cover-letter note, confirmed answers used, and the exact
+success message. Do not update the legacy JSON applications array.
+
+Search Gmail for SEEK success confirmations after submitting. If a success page is visible but the email is missing, wait briefly and search again before final reporting; if it still has not arrived, record the page confirmation and mark the email confirmation as pending rather than blocking the run.
+
+Close Chrome tabs opened by the run when the user asks or when working in a shared profile, after records and confirmations are complete.
 
 Manual user submissions may be recorded from SEEK Applied jobs with `source: manual_user_submission`; mark resume and cover letter as unknown if they were not inspected.
