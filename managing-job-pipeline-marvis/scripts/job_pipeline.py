@@ -160,7 +160,7 @@ def record_to_note(record: dict[str, Any], order: int) -> tuple[dict[str, Any], 
         "resume_filename": record.get("resume_filename"),
         "cover_letter": record.get("cover_letter"),
     }
-    body = [f"# {record.get('role') or 'Unknown role'} — {record.get('company') or 'Unknown company'}", ""]
+    body = [f"# {record.get('role') or 'Unknown role'} - {record.get('company') or 'Unknown company'}", ""]
     if record.get("notes"):
         body.extend(["## Notes", "", str(record["notes"]), ""])
     if record.get("confirmed_sensitive_answers"):
@@ -208,6 +208,8 @@ def cmd_find(args: argparse.Namespace) -> int:
 
 def cmd_add(args: argparse.Namespace) -> int:
     record = json.loads(args.record_json.read_text(encoding="utf-8-sig"))
+    if args.status:
+        record["status"] = args.status
     ensure_project(args.vault)
     job_id = str(record.get("job_id") or record.get("portal_job_id") or "")
     url = canonical_url(record.get("url") or record.get("job_url"))
@@ -236,7 +238,7 @@ def cmd_transition(args: argparse.Namespace) -> int:
     fm["status"] = args.status
     fm["archived"] = args.status in TERMINAL
     if args.note:
-        body = body.rstrip() + f"\n\n## Status update — {date.today().isoformat()}\n\n{args.note}\n"
+        body = body.rstrip() + f"\n\n## Status update - {date.today().isoformat()}\n\n{args.note}\n"
     path.write_text(render_note(fm, body), encoding="utf-8")
     destination_folder = project_dir(args.vault) / ("archive" if args.status in TERMINAL else "tasks")
     destination_folder.mkdir(parents=True, exist_ok=True)
@@ -307,6 +309,7 @@ def build_parser() -> argparse.ArgumentParser:
     find.set_defaults(func=cmd_find)
     add = sub.add_parser("add")
     add.add_argument("--record-json", type=Path, required=True)
+    add.add_argument("--status", choices=sorted(VALID_STATUSES))
     add.set_defaults(func=cmd_add)
     transition = sub.add_parser("transition")
     transition.add_argument("--job-id", required=True)

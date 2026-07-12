@@ -4,10 +4,10 @@ Use this reference whenever a tailored package enters a live application.
 
 ## Local Data Sources
 
-Load `managing-job-pipeline-marvis` and use `Marvis/Job Search/tasks/*.md` as
-the application system of record. Keep `job_application_profile.json` for
-private reusable answers, portal mappings, account overrides, and resume
-assets. Treat its legacy applications array and Markdown logs as read-only
+Load `managing-job-pipeline-marvis` and use `Marvis/Job Search/tasks/*.md` plus
+`Marvis/Job Search/archive/*.md` as the application system of record. Keep
+`job_application_profile.json` for private reusable answers, portal mappings,
+account overrides, and resume assets. Treat its legacy applications array and Markdown logs as read-only
 migration references after the Marvis project exists.
 
 Never store passwords, one-time codes, tax IDs, identity documents, or secret
