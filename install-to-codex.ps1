@@ -5,6 +5,7 @@ $targetRoot = Join-Path $HOME ".codex\skills"
 
 $skills = @(
     "filtering-jobs-multilingual",
+    "indeed-native-apply",
     "tailoring-resume-to-jd",
     "managing-job-pipeline-marvis"
 )

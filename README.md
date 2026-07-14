@@ -1,9 +1,10 @@
 # Job Mediator Skills
 
-This folder packages three Codex skills around the local Job Mediator backend
+This folder packages four Codex skills around the local Job Mediator backend
 and a Marvis-compatible application pipeline:
 
 - `filtering-jobs-multilingual`
+- `indeed-native-apply`
 - `tailoring-resume-to-jd`
 - `managing-job-pipeline-marvis`
 
@@ -13,6 +14,7 @@ These skills are meant for agents that need to:
 - search SEEK and doda from a local resume
 - evaluate JD fit with the A-F scoring backend
 - tailor resumes and generate downstream materials
+- apply to Indeed Australia with saved/native resumes
 - track submitted jobs to avoid duplicate applications
 - store application state as local Marvis Markdown tasks
 - reuse a local, private application profile for common form answers
@@ -23,6 +25,8 @@ These skills are meant for agents that need to:
 - `filtering-jobs-multilingual/SKILL.md`
 - `filtering-jobs-multilingual/application-records.md`
 - `filtering-jobs-multilingual/gmail-seek-recommendations.md`
+- `indeed-native-apply/SKILL.md`
+- `indeed-native-apply/scripts/indeed_apply_helper.py`
 - `tailoring-resume-to-jd/SKILL.md`
 - `tailoring-resume-to-jd/application-records.md`
 - `tailoring-resume-to-jd/application-personal-info-template.md`
@@ -42,7 +46,7 @@ From this repository root:
 powershell -ExecutionPolicy Bypass -File .\install-to-codex.ps1
 ```
 
-The script copies all three skills into:
+The script copies all four skills into:
 
 ```text
 %USERPROFILE%\.codex\skills\
@@ -83,6 +87,6 @@ Use Chrome when the agent needs:
 - the user's logged-in browser session
 - existing tabs or cookies
 - real portal inspection after ranking jobs
-- live application flows on SEEK, doda, Ashby, Greenhouse, Lever, or company career pages
+- live application flows on SEEK, Indeed, doda, Ashby, Greenhouse, Lever, or company career pages
 
 Do not use generic browsing for those authenticated or profile-dependent steps. The agent should explicitly invoke `@chrome` first, then continue the live browser task there.
